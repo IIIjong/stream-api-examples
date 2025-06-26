@@ -146,3 +146,123 @@ map.entrySet().stream()
 | 문자열/배열 변환          | `Arrays.stream()` 또는 `str.chars()` 등 활용 가능 |
 
 ---
+
+## ✅ `::` 메서드 참조란?
+
+* `람다식`을 대신해서 **메서드 이름만으로 참조**할 수 있도록 해주는 문법입니다.
+* **`람다식이 단순히 메서드 하나만 호출하는 경우`에 사용하면 좋습니다.**
+
+---
+
+## ✅ 기본 문법
+
+| 형태                          | 의미                 | 예시                    |
+| --------------------------- | ------------------ | --------------------- |
+| `ClassName::staticMethod`   | 정적 메서드 참조          | `Math::abs`           |
+| `object::instanceMethod`    | 특정 객체의 인스턴스 메서드 참조 | `System.out::println` |
+| `ClassName::instanceMethod` | 매개변수의 메서드 참조       | `String::toUpperCase` |
+| `ClassName::new`            | 생성자 참조             | `User::new`           |
+
+---
+
+## 🔍 예시로 이해해보기
+
+### 1. 정적 메서드 참조
+
+```java
+List<Integer> numbers = Arrays.asList(-3, -1, 2);
+
+List<Integer> absList = numbers.stream()
+    .map(Math::abs) // Math 클래스의 정적 메서드 abs 사용
+    .collect(Collectors.toList());
+
+System.out.println(absList); // [3, 1, 2]
+```
+
+> 아래와 같던 람다식을 줄인 것:
+
+```java
+.map(n -> Math.abs(n))
+```
+
+---
+
+### 2. 인스턴스 메서드 참조 (매개변수 대상)
+
+```java
+List<String> list = Arrays.asList("java", "spring", "stream");
+
+List<String> upperList = list.stream()
+    .map(String::toUpperCase) // 각 요소(String)의 toUpperCase() 메서드 호출
+    .collect(Collectors.toList());
+
+System.out.println(upperList); // [JAVA, SPRING, STREAM]
+```
+
+> 아래 람다식과 동일:
+
+```java
+.map(s -> s.toUpperCase())
+```
+
+---
+
+### 3. 객체의 인스턴스 메서드 참조
+
+```java
+List<String> list = Arrays.asList("A", "B", "C");
+
+// System.out 객체의 println 메서드를 참조
+list.forEach(System.out::println);
+```
+
+> 아래와 같던 코드 축약:
+
+```java
+list.forEach(s -> System.out.println(s));
+```
+
+---
+
+### 4. 생성자 참조
+
+```java
+class User {
+    String name;
+    public User(String name) { this.name = name; }
+}
+
+List<String> names = Arrays.asList("Tom", "Jerry");
+
+// String 하나를 받아서 User 객체로 바꾸는 생성자 참조
+List<User> users = names.stream()
+    .map(User::new)
+    .collect(Collectors.toList());
+```
+
+> 아래와 같던 코드 축약:
+
+```java
+.map(name -> new User(name))
+```
+
+---
+
+## ✅ 한눈에 비교
+
+| 람다식                               | 메서드 참조                |
+| --------------------------------- | --------------------- |
+| `x -> x.toUpperCase()`            | `String::toUpperCase` |
+| `x -> System.out.println(x)`      | `System.out::println` |
+| `s -> new User(s)`                | `User::new`           |
+| `(a, b) -> Integer.compare(a, b)` | `Integer::compare`    |
+
+---
+
+## ✨ 요약
+
+* `::`는 메서드를 참조하는 문법으로 **람다식을 간결하게** 만든다.
+* 조건: **람다식이 메서드 한 줄 호출일 때만** 사용 가능.
+* 코드를 **간결 + 가독성 좋게** 만드는 데 유용하다.
+
+---
