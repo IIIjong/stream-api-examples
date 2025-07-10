@@ -84,7 +84,7 @@ new Thread(task).start(); // 새로운 쓰레드에서 run() 실행
 ### ✅ 4. **Optional + 람다**
 
 ```java
-Optional<String> nickname = Optional.of("민주");
+Optional<String> nickname = Optional.of("홍길동");
 
 nickname.ifPresent(n -> System.out.println("닉네임: " + n)); // Consumer<String>
 ```
