@@ -377,6 +377,10 @@ users.sort(Comparator.comparing(User::getName).reversed());
 > `Comparable` 👉 **"클래스 안에서 직접 비교 기준 정의"**
 > `Comparator` 👉 **"클래스 밖에서 다양한 정렬 기준 정의"**
 
+
+"정렬은 비교가 있어야 가능하다!"
+객체를 정렬하려면 반드시 Comparable 구현 or Comparator 전달이 필요하다.
+
 ---
 
 
