@@ -267,10 +267,6 @@ List<User> users = names.stream()
 
 ---
 
-백민주님이 메서드 참조 정리한 스타일 너무 좋아서, 요청하신 \*\*`Comparable`과 `Comparator`\*\*도 **같은 형식**으로 예쁘고 간결하게 정리해드릴게요 ✍️
-
----
-
 ## ✅ Comparable vs Comparator 정리
 
 > **객체 정렬 기준을 정의하는 두 가지 방식**
