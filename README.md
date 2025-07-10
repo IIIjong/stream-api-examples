@@ -1,4 +1,4 @@
-## ✅ 1. 람다식이란?
+## ✅ 람다식이란?
 
 람다식은 **익명 함수**를 표현하는 방식입니다.
 함수를 간단히 **화살표(`->`) 문법**으로 표현합니다.
@@ -21,8 +21,110 @@
 * Stream, Comparator 등에서 자주 사용
 
 ---
+## ✅ 자주 쓰이는 곳
 
-## ✅ 2. Stream API란?
+### ✅ 1. **Stream API** – map, filter, sorted, forEach
+
+```java
+List<String> names = Arrays.asList("Alice", "Bob", "Charlie");
+
+names.stream()
+    .filter(s -> s.length() >= 4) // Predicate<String>: 길이가 4 이상인 문자열만 통과
+    .map(s -> s.toUpperCase())   // Function<String, String>: 대문자로 변환
+    .sorted()                    // 기본 정렬 (String은 Comparable 구현)
+    .forEach(s -> System.out.println(s)); // Consumer<String>: 출력
+```
+
+### 🧠 작동 순서
+
+1. `filter`: 조건(`s.length() >= 4`)에 맞는 요소만 통과
+2. `map`: 요소를 대문자로 변환
+3. `sorted`: 알파벳순 정렬
+4. `forEach`: 하나씩 콘솔에 출력
+
+---
+
+### ✅ 2. **컬렉션 정렬** – List.sort + 람다
+
+```java
+List<Integer> numbers = Arrays.asList(5, 2, 8, 1);
+
+numbers.sort((a, b) -> b - a); // Comparator<Integer>: 내림차순 정렬 기준 제공
+
+System.out.println(numbers); // [8, 5, 2, 1]
+```
+
+### 🧠 작동 원리
+
+* `sort`는 내부적으로 두 요소 `a`, `b`를 받아 정수 리턴하는 **람다식(Comparator)** 필요
+* `b - a` → 내림차순
+
+  * 음수: b < a → 자리 바꿈 안 함
+  * 양수: b > a → 자리 바꿈
+
+---
+
+### ✅ 3. **Thread 실행 (Runnable)**
+
+```java
+Runnable task = () -> System.out.println("Thread is running!"); // Runnable: run() 메서드 구현
+
+new Thread(task).start(); // 새로운 쓰레드에서 run() 실행
+```
+
+### 🧠 작동 원리
+
+* `Runnable`은 **매개변수 없고 리턴도 없는 함수형 인터페이스**
+* `()`는 인자 없음
+* `->` 뒤는 실행할 코드 (`System.out.println(...)`)
+* 내부적으로 `new Runnable() { public void run() { ... } }` 로 처리됨
+
+---
+
+### ✅ 4. **Optional + 람다**
+
+```java
+Optional<String> nickname = Optional.of("민주");
+
+nickname.ifPresent(n -> System.out.println("닉네임: " + n)); // Consumer<String>
+```
+
+### 🧠 작동 원리
+
+* `ifPresent`는 값이 있으면 **람다에 전달**
+* `n -> ...`는 Consumer 역할: n 받아서 출력
+
+---
+
+### ✅ 5. **이벤트 리스너 (JavaFX or Swing)**
+
+```java
+button.setOnAction(e -> System.out.println("버튼 클릭됨!")); // EventHandler<ActionEvent>
+```
+
+### 🧠 작동 원리
+
+* `setOnAction`은 이벤트 발생 시 실행할 **람다(핸들러)** 요구
+* `e`는 이벤트 정보 → 콘솔에 출력하는 역할
+* 내부적으로 `handle(ActionEvent e)` 구현됨
+
+---
+
+### ✅ 총정리: 자주 쓰이는 람다 위치 & 인터페이스
+
+| 분야           | 메서드                      | 인터페이스 (함수형)       | 예시 람다                        |
+| ------------ | ------------------------ | ----------------- | ---------------------------- |
+| **Stream**   | `filter`                 | `Predicate<T>`    | `x -> x > 5`                 |
+|              | `map`                    | `Function<T, R>`  | `s -> s.toUpperCase()`       |
+|              | `forEach`                | `Consumer<T>`     | `s -> System.out.println(s)` |
+| **sort**     | `sort(Comparator)`       | `Comparator<T>`   | `(a, b) -> a - b`            |
+| **Thread**   | `new Thread(Runnable)`   | `Runnable`        | `() -> { ... }`              |
+| **Optional** | `ifPresent`              | `Consumer<T>`     | `v -> System.out.println(v)` |
+| **Event**    | `setOnAction` (JavaFX 등) | `EventHandler<T>` | `e -> handleClick(e)`        |
+
+---
+
+## ✅ Stream API란?
 
 자바에서 \*\*컬렉션(List, Set 등)\*\*을 **함수형 방식으로 처리**하는 방법입니다.
 
@@ -374,8 +476,9 @@ users.sort(Comparator.comparing(User::getName).reversed());
 
 ## ✅ 정리 문장 (암기용)
 
-> `Comparable` 👉 **"클래스 안에서 직접 비교 기준 정의"**
-> `Comparator` 👉 **"클래스 밖에서 다양한 정렬 기준 정의"**
+|`Comparable`|`Comparator`|
+|-------------------------------------------|----------------------------------------------|
+|👉 **"클래스 안에서 직접 비교 기준 정의"**|👉 **"클래스 밖에서 다양한 정렬 기준 정의"**|
 
 
 "정렬은 비교가 있어야 가능하다!"
