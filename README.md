@@ -266,3 +266,121 @@ List<User> users = names.stream()
 * 코드를 **간결 + 가독성 좋게** 만드는 데 유용하다.
 
 ---
+
+백민주님이 메서드 참조 정리한 스타일 너무 좋아서, 요청하신 \*\*`Comparable`과 `Comparator`\*\*도 **같은 형식**으로 예쁘고 간결하게 정리해드릴게요 ✍️
+
+---
+
+## ✅ Comparable vs Comparator 정리
+
+> **객체 정렬 기준을 정의하는 두 가지 방식**
+
+---
+
+## ✅ 핵심 차이
+
+| 구분     | Comparable                          | Comparator                             |
+| ------ | ----------------------------------- | -------------------------------------- |
+| 정의 위치  | 클래스 내부 (`implements Comparable<T>`) | 클래스 외부에서 따로 정의                         |
+| 인터페이스  | `Comparable<T>`                     | `Comparator<T>`                        |
+| 메서드 이름 | `compareTo(T other)`                | `compare(T o1, T o2)`                  |
+| 기준 개수  | **1개 (고정)**                         | **여러 개 가능 (유연)**                       |
+| 사용 목적  | "기본 정렬 기준"                          | "다양한 정렬 조건 필요할 때"                      |
+| 사용 예   | `Collections.sort(list)`            | `list.sort(Comparator.comparing(...))` |
+
+---
+
+## ✅ 기본 문법
+
+### 📌 Comparable (기본 정렬 기준)
+
+```java
+public class Person implements Comparable<Person> {
+    String name;
+    int age;
+
+    @Override
+    public int compareTo(Person other) {
+        return this.name.compareTo(other.name); // 이름 기준 오름차순
+    }
+}
+```
+
+### 📌 Comparator (외부 정렬 기준)
+
+```java
+Comparator<Person> byAge = Comparator.comparingInt(Person::getAge);
+
+List<Person> sorted = people.stream()
+    .sorted(byAge)
+    .collect(Collectors.toList());
+```
+
+---
+
+## 🔍 예시로 이해하기
+
+### 1. Comparable: 클래스 안에 정렬 기준 내장
+
+```java
+class User implements Comparable<User> {
+    String name;
+    public int compareTo(User other) {
+        return this.name.compareTo(other.name); // 이름순 정렬
+    }
+}
+List<User> users = ...;
+Collections.sort(users); // compareTo() 기준으로 정렬됨
+```
+
+---
+
+### 2. Comparator: 외부에서 정렬 기준 지정
+
+```java
+Comparator<User> ageComparator = Comparator.comparingInt(User::getAge);
+users.sort(ageComparator); // 나이순 정렬
+
+// 또는 람다식
+users.sort((u1, u2) -> u1.getAge() - u2.getAge());
+```
+
+---
+
+### 3. 복합 정렬 (이름 → 나이)
+
+```java
+users.sort(
+    Comparator.comparing(User::getName)
+              .thenComparingInt(User::getAge)
+);
+```
+
+---
+
+### 4. 내림차순 정렬
+
+```java
+users.sort(Comparator.comparing(User::getName).reversed());
+```
+
+---
+
+## ✅ 한눈에 비교
+
+| 람다식 정렬                                         | Comparator 메서드 참조 정렬                               |
+| ---------------------------------------------- | -------------------------------------------------- |
+| `(a, b) -> a.getName().compareTo(b.getName())` | `Comparator.comparing(User::getName)`              |
+| `(a, b) -> b.getAge() - a.getAge()`            | `Comparator.comparingInt(User::getAge).reversed()` |
+| `(a, b) -> new User(a)`                        | `User::new` (생성자 참조와 결합 가능)                        |
+
+---
+
+## ✅ 정리 문장 (암기용)
+
+> `Comparable` 👉 **"클래스 안에서 직접 비교 기준 정의"**
+> `Comparator` 👉 **"클래스 밖에서 다양한 정렬 기준 정의"**
+
+---
+
+
